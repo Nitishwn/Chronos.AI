@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meeting Scheduler</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+        integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/20+rA5k7pW0aGk6C6S+R9n6p7aH5+rF6eM1Ew2Oq1KxV+X+g+Q+"
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="bg-gray-900 text-gray-50 flex items-center justify-center min-h-screen p-4 sm:p-6">
+
+    <div class="bg-gray-800 rounded-3xl shadow-2xl w-full max-w-4xl p-6 sm:p-10 space-y-8 border border-gray-700">
+
+        <header class="text-center space-y-2">
+            <h1 class="text-5xl font-extrabold tracking-tight leading-tight">
+                <span class="bg-clip-text text-transparent"
+                    style="background-image: linear-gradient(to right, #6366f1, #8b5cf6);">Meeting Scheduler</span>
+            </h1>
+            <p class="mt-2 text-xl font-medium text-gray-400">Your <span
+                        class="font-bold text-gray-200">AI-powered</span> assistant for seamless scheduling.</p>
+        </header>
+
+        <div id="outputArea" class="space-y-6">
+
+            <div id="statusMessage"
+                class="text-center font-medium text-gray-400 transition-all duration-300 ease-in-out">
+                Enter a meeting request above to begin.
+            </div>
+
+            <div class="relative">
+                <input type="text" id="meetingQuery"
+                    placeholder="e.g., Book a 30-min sync with John tomorrow at 2 PM or reschedule meeting with Jane"
+                    class="w-full pl-6 pr-32 py-4 border border-gray-600 bg-gray-700 text-gray-200 rounded-full shadow-lg text-base focus:outline-none focus:ring-4 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300">
+                <button onclick="processMeetingQuery()"
+                    class="absolute inset-y-0 right-0 my-1 mr-1 px-6 rounded-full bg-indigo-600 text-white font-bold hover:bg-indigo-700 transition-colors duration-200 active:scale-95 transform flex items-center space-x-2">
+                    <i class="fa-solid fa-paper-plane"></i>
+                    <span>Send</span>
+                </button>
+            </div>
+
+            <div class="flex justify-center rounded-xl p-1 bg-gray-700 shadow-inner">
+                <button id="newMeetingTabBtn" onclick="showTab('newMeeting')"
+                    class="tab-button active flex-1 flex items-center justify-center space-x-2 py-3 px-6 rounded-lg text-sm font-semibold text-white transition-all duration-300">
+                    <i class="fa-solid fa-calendar-plus"></i>
+                    <span>New Meeting</span>
+                </button>
+                <button id="manageMeetingsTabBtn" onclick="showTab('manageMeetings')"
+                    class="tab-button flex-1 flex items-center justify-center space-x-2 py-3 px-6 rounded-lg text-sm font-semibold text-gray-400 transition-all duration-300 hover:text-white">
+                    <i class="fa-solid fa-calendar-check"></i>
+                    <span>Manage Meetings</span>
+                </button>
+                <button id="upcomingMeetingsTabBtn" onclick="showTab('upcomingMeetings')"
+                    class="tab-button flex-1 flex items-center justify-center space-x-2 py-3 px-6 rounded-lg text-sm font-semibold text-gray-400 transition-all duration-300 hover:text-white">
+                    <i class="fa-solid fa-list-ul"></i>
+                    <span>View Meetings</span>
+                </button>
+            </div>
+
+            <div id="newMeetingTab" class="tab-content">
+                <div id="loadingIndicator" class="text-center text-indigo-400 italic mb-4 hidden">
+                    <i class="fa-solid fa-spinner fa-spin mr-2"></i>Processing your request...
+                </div>
+
+                <div id="suggestionsArea"
+                    class="bg-gray-700 rounded-2xl p-6 mt-6 shadow-md hidden border-t-4 border-sky-500">
+                    <h2 class="text-2xl font-bold text-sky-400 mb-4 flex items-center space-x-3">
+                        <i class="fa-solid fa-lightbulb text-sky-400"></i>
+                        <span>Suggested Time Slots</span>
+                    </h2>
+                    <p id="suggestionsMessage" class="text-gray-400 mb-4"></p>
+                    <div id="slotList" class="space-y-4 scrollable-content"></div>
+                </div>
+
+                <div id="manualInputButtonArea" class="text-center my-6">
+                    <button onclick="showManualForm()"
+                        class="px-6 py-3 bg-gray-600 text-gray-200 font-semibold rounded-full hover:bg-gray-700 transition-colors duration-200 active:scale-95">
+                        <i class="fa-solid fa-pen-to-square mr-2"></i>Enter Details Manually
+                    </button>
+                </div>
+            </div>
+
+            <div id="manageMeetingsTab" class="tab-content hidden">
+                <div id="manageLoadingIndicator" class="text-center text-indigo-400 italic mb-4 hidden">
+                    <i class="fa-solid fa-spinner fa-spin mr-2"></i>Searching for meetings...
+                </div>
+
+                <div id="existingMeetingsArea"
+                    class="bg-gray-700 rounded-2xl p-6 mt-6 shadow-md hidden border-t-4 border-amber-500">
+                    <h2 class="text-2xl font-bold text-amber-400 mb-4 flex items-center space-x-3">
+                        <i class="fa-solid fa-search text-amber-400"></i>
+                        <span>Found Meetings</span>
+                    </h2>
+                    <p id="existingMeetingsMessage" class="text-gray-400 mb-4"></p>
+                    <div id="existingMeetingsList" class="space-y-4 scrollable-content"></div>
+                </div>
+            </div>
+
+            <div id="meetingDetailsContainer"
+                class="bg-gray-700 rounded-2xl p-6 mt-6 shadow-md hidden border-t-4 border-indigo-500">
+                <h2 class="text-2xl font-bold text-indigo-400 mb-4 flex items-center space-x-3">
+                    <i class="fa-solid fa-clipboard-list text-indigo-400"></i>
+                    <span id="formTitle">Update Meeting Details</span>
+                </h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-6">
+                    <div>
+                        <label for="meetingTitle"
+                            class="block text-sm font-semibold text-gray-400 mb-1">Title</label>
+                        <input type="text" id="meetingTitle"
+                            class="mt-1 block w-full rounded-lg border-gray-600 bg-gray-800 text-white shadow-sm p-3 focus:border-indigo-500 focus:ring-indigo-500 transition-all input-glow"
+                            required>
+                    </div>
+                    <div>
+                        <label for="meetingAttendees"
+                            class="block text-sm font-semibold text-gray-400 mb-1">Attendees (comma-separated)</label>
+                        <input type="text" id="meetingAttendees"
+                            class="mt-1 block w-full rounded-lg border-gray-600 bg-gray-800 text-white shadow-sm p-3 focus:border-indigo-500 focus:ring-indigo-500 transition-all input-glow"
+                            required>
+                    </div>
+                    <div>
+                        <label for="meetingStartTime"
+                            class="block text-sm font-semibold text-gray-400 mb-1">Start Time</label>
+                        <input type="datetime-local" id="meetingStartTime"
+                            class="mt-1 block w-full rounded-lg border-gray-600 bg-gray-800 text-white shadow-sm p-3 focus:border-indigo-500 focus:ring-indigo-500 transition-all input-glow"
+                            required>
+                    </div>
+                    <div>
+                        <label for="meetingDuration"
+                            class="block text-sm font-semibold text-gray-400 mb-1">Duration (minutes)</label>
+                        <input type="number" id="meetingDuration"
+                            class="mt-1 block w-full rounded-lg border-gray-600 bg-gray-800 text-white shadow-sm p-3 focus:border-indigo-500 focus:ring-indigo-500 transition-all input-glow"
+                            required min="1" step="1">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="meetingDescription"
+                            class="block text-sm font-semibold text-gray-400 mb-1">Description</label>
+                        <textarea id="meetingDescription" rows="2"
+                            class="mt-1 block w-full rounded-lg border-gray-600 bg-gray-800 text-white shadow-sm p-3 focus:border-indigo-500 focus:ring-indigo-500 transition-all input-glow"></textarea>
+                    </div>
+                </div>
+
+                <div class="mt-8 flex justify-end space-x-3">
+                    <button id="cancelActionButton" onclick="resetUI()"
+                        class="flex items-center space-x-2 bg-gray-600 text-gray-200 font-semibold py-3 px-6 rounded-full hover:bg-gray-700 transition-colors duration-200 active:scale-95">
+                        <i class="fa-solid fa-xmark"></i>
+                        <span>Cancel</span>
+                    </button>
+                    <button id="scheduleActionButton" onclick="scheduleMeeting()"
+                        class="flex items-center space-x-2 bg-indigo-600 text-white font-semibold py-3 px-6 rounded-full hover:bg-indigo-700 transition-colors duration-200 active:scale-95">
+                        <i class="fa-solid fa-calendar-plus"></i>
+                        <span>Schedule Meeting</span>
+                    </button>
+                </div>
+            </div>
+
+            <div id="upcomingMeetingsTab" class="tab-content hidden">
+                <div id="upcomingMeetingsLoadingIndicator"
+                    class="text-center text-indigo-400 italic mb-4 hidden">
+                    <i class="fa-solid fa-spinner fa-spin mr-2"></i>Fetching your upcoming
+                    meetings...
+                </div>
+                <div id="rescheduleSuggestionsArea"
+                    class="bg-gray-700 rounded-2xl p-6 mt-6 shadow-md hidden border-t-4 border-sky-500">
+                    <h2 class="text-2xl font-bold text-sky-400 mb-4 flex items-center space-x-3">
+                        <i class="fa-solid fa-lightbulb text-sky-400"></i>
+                        <span>Suggested Time Slots</span>
+                    </h2>
+                    <p id="rescheduleSuggestionsMessage" class="text-gray-400 mb-4"></p>
+                    <div id="rescheduleSlotList" class="space-y-4 scrollable-content"></div>
+                </div>
+            </div>
+
+            <div id="calendarAndListSection" class="hidden">
+                <div class="p-6 bg-gray-700 rounded-2xl shadow-md border border-gray-600 mb-8">
+                    <h2
+                        class="text-2xl font-bold text-gray-200 mb-4 text-center flex items-center justify-center space-x-3">
+                        <i class="fa-solid fa-calendar-days text-gray-400"></i>
+                        <span>Calendar View</span>
+                    </h2>
+                    <div id="upcomingCalendar">
+                        <div class="flex justify-between items-center mb-4 text-gray-200">
+                            <button class="text-gray-400 hover:text-white text-lg"><i
+                                        class="fa-solid fa-chevron-left"></i></button>
+                            <span class="text-lg font-bold" id="monthYearDisplay">August 2025</span>
+                            <button class="text-gray-400 hover:text-white text-lg"><i
+                                        class="fa-solid fa-chevron-right"></i></button>
+                        </div>
+                        <div class="calendar-grid text-xs sm:text-sm" id="calendarGrid">
+                            <div class="text-gray-400 font-semibold">Sun</div>
+                            <div class="text-gray-400 font-semibold">Mon</div>
+                            <div class="text-gray-400 font-semibold">Tue</div>
+                            <div class="text-gray-400 font-semibold">Wed</div>
+                            <div class="text-gray-400 font-semibold">Thu</div>
+                            <div class="text-gray-400 font-semibold">Fri</div>
+                            <div class="text-gray-400 font-semibold">Sat</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="upcomingMeetingsArea"
+                    class="bg-gray-700 rounded-2xl p-6 shadow-md border border-gray-600">
+                    <h2 class="text-2xl font-bold text-gray-200 mb-4 flex items-center space-x-3">
+                        <i class="fa-solid fa-list-ul text-gray-400"></i>
+                        <span>Upcoming Meetings List</span>
+                    </h2>
+                    <div id="upcomingMeetingsList" class="space-y-4 scrollable-content">
+                        </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="confirmationModal"
+        class="fixed inset-0 bg-gray-900 bg-opacity-75 z-50 hidden transition-opacity duration-300">
+        <div class="flex items-center justify-center min-h-screen">
+            <div
+                class="bg-gray-800 p-8 rounded-2xl shadow-xl w-full max-w-md transform transition-all duration-300 scale-95 border border-gray-700">
+                <div class="text-center">
+                    <div
+                        class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-800">
+                        <i class="fa-solid fa-triangle-exclamation text-red-400 text-2xl"></i>
+                    </div>
+                    <h3 class="mt-4 text-2xl font-bold text-gray-50">Are you sure?</h3>
+                    <p id="confirmationMessage" class="mt-2 text-md text-gray-400">Do you really
+                        want to cancel this meeting? This action cannot be undone.</p>
+                </div>
+                <div class="mt-6 flex justify-center space-x-4">
+                    <button id="confirmCancelBtn"
+                        class="w-full inline-flex justify-center rounded-full border border-transparent shadow-sm px-6 py-3 bg-red-600 text-base font-semibold text-white hover:bg-red-700 active:scale-95">
+                        Yes, Cancel
+                    </button>
+                    <button id="denyCancelBtn"
+                        class="w-full inline-flex justify-center rounded-full border border-gray-600 shadow-sm px-6 py-3 bg-gray-700 text-base font-semibold text-gray-200 hover:bg-gray-600 active:scale-95">
+                        No
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="simplifiedConfirmationModal" class="fixed inset-0 bg-gray-900 bg-opacity-75 z-50 hidden transition-opacity duration-300">
+        <div class="flex items-center justify-center min-h-screen">
+            <div class="bg-gray-800 p-8 rounded-2xl shadow-xl w-full max-w-lg transform transition-all duration-300 scale-95 border border-gray-700">
+                <div class="text-center">
+                    <h3 id="simplifiedConfirmationTitle" class="mt-2 text-2xl font-bold text-gray-50">Confirm Meeting Change</h3>
+                    <p id="simplifiedConfirmationMessage" class="mt-2 text-md text-gray-400">Please confirm the details below.</p>
+                </div>
+                <div class="mt-6 space-y-4 text-left">
+                    <div id="originalDetails" class="bg-gray-700 p-4 rounded-xl border border-gray-600">
+                        <h4 class="text-lg font-semibold text-gray-300 mb-2">Original Meeting</h4>
+                        <p class="text-sm text-gray-400"><span class="font-bold text-gray-200">Title:</span> <span id="originalTitle"></span></p>
+                        <p class="text-sm text-gray-400"><span class="font-bold text-gray-200">Time:</span> <span id="originalTime"></span></p>
+                    </div>
+                    <div id="newDetails" class="bg-indigo-900 bg-opacity-25 p-4 rounded-xl border border-indigo-500">
+                        <h4 class="text-lg font-semibold text-indigo-400 mb-2">New Time</h4>
+                        <p class="text-sm text-gray-400"><span class="font-bold text-gray-200">Title:</span> <span id="newTitle"></span></p>
+                        <p class="text-sm text-gray-400"><span class="font-bold text-gray-200">Time:</span> <span id="newTime"></span></p>
+                    </div>
+                </div>
+                <div class="mt-8 flex justify-end space-x-4">
+                    <button id="denySimplifiedConfirmationBtn"
+                        class="w-full inline-flex justify-center rounded-full border border-gray-600 shadow-sm px-6 py-3 bg-gray-700 text-base font-semibold text-gray-200 hover:bg-gray-600 active:scale-95">
+                        No
+                    </button>
+                    <button id="confirmSimplifiedConfirmationBtn"
+                        class="w-full inline-flex justify-center rounded-full border border-transparent shadow-sm px-6 py-3 bg-indigo-600 text-base font-semibold text-white hover:bg-indigo-700 active:scale-95">
+                        Yes, Confirm
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="app.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,13 @@
+Flask
+Flask-Cors
+google-api-python-client
+google-auth-httplib2
+google-auth-oauthlib
+google-generativeai
+python-dotenv
+pytz
+httplib2
+requests
+pendulum
+# You will also need a library for the Gemini API, 
+# which might be 'google-generativeai' or a similar client.

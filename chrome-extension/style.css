@@ -1,0 +1,182 @@
+body {
+    width: 350px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 15px;
+    background-color: #1e1e1e;
+    color: #eee;
+    font-size: 14px;
+}
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+header {
+    text-align: center;
+}
+h1 {
+    font-size: 1.6em;
+    font-weight: bold;
+    background-image: linear-gradient(to right, #6366f1, #a855f7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 0;
+}
+.status-message {
+    font-style: italic;
+    color: #aaa;
+    font-size: 0.9em;
+    margin-top: 5px;
+}
+.tab-container {
+    display: flex;
+    justify-content: space-around;
+    background-color: #2a2a2a;
+    border-radius: 8px;
+    padding: 3px;
+    margin-bottom: 10px;
+}
+.tab-btn {
+    flex: 1;
+    padding: 8px;
+    border: none;
+    background-color: transparent;
+    color: #999;
+    cursor: pointer;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: all 0.2s ease-in-out;
+}
+.tab-btn.active {
+    background-color: #444;
+    color: #fff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+.tab-btn:hover:not(.active) {
+    color: #ccc;
+}
+#tabContent {
+    min-height: 200px;
+}
+.tab-page {
+    display: none;
+}
+.tab-page.active {
+    display: block;
+}
+.input-area {
+    display: flex;
+    gap: 8px;
+}
+#meetingQuery, #meetingSearch {
+    flex-grow: 1;
+    padding: 8px 12px;
+    border: 1px solid #555;
+    background-color: #333;
+    color: white;
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+#meetingQuery:focus, #meetingSearch:focus {
+    border-color: #6366f1;
+}
+.send-btn, .mic-btn, .search-btn {
+    padding: 8px 15px;
+    background-color: #6366f1;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background-color 0.2s, transform 0.1s;
+}
+.send-btn:hover, .mic-btn:hover, .search-btn:hover {
+    background-color: #5558e0;
+}
+.mic-btn.listening {
+    background-color: #ef4444;
+    animation: pulse 1.5s infinite;
+}
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+.result-box {
+    background-color: #2a2a2a;
+    padding: 12px;
+    border-radius: 8px;
+    margin-top: 15px;
+    border: 1px solid #444;
+}
+.result-box h3 {
+    font-size: 1.1em;
+    font-weight: 600;
+    color: #a855f7;
+    margin-bottom: 8px;
+}
+.hidden {
+    display: none;
+}
+.slot-list, .meeting-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.slot-item, .meeting-item {
+    background-color: #3b3b3b;
+    padding: 10px;
+    border-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.slot-item span {
+    font-size: 0.9em;
+}
+.select-btn, .action-btn {
+    padding: 6px 10px;
+    background-color: #6366f1;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.8em;
+}
+.select-btn:hover, .action-btn:hover {
+    background-color: #5558e0;
+}
+.action-btn.cancel {
+    background-color: #dc2626;
+}
+.action-btn.cancel:hover {
+    background-color: #b91c1c;
+}
+.action-btn.reschedule {
+    background-color: #f59e0b;
+}
+.action-btn.reschedule:hover {
+    background-color: #d97706;
+}
+.meeting-title {
+    font-weight: 600;
+    color: #fff;
+    font-size: 1em;
+}
+.meeting-time {
+    color: #ccc;
+    font-size: 0.85em;
+    margin-top: 2px;
+}
+.loading-indicator {
+    text-align: center;
+    color: #6366f1;
+    margin-top: 15px;
+}
+.meeting-details {
+    flex-grow: 1;
+}
+.meeting-actions {
+    display: flex;
+    gap: 5px;
+}

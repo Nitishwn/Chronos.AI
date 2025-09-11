@@ -1,0 +1,19 @@
+# Environment variables file
+.env
+
+# Google API Tokens and Secrets
+client_secret_personal_calendar.json
+token_personal_calendar.json
+token_personal_gmail.json
+contacts.json
+local_contacts.json
+
+# Other files to ignore
+__pycache__/
+*.pyc
+test_nlp.py
+test_gmail_api.py
+test_environment.py
+test_directory_mock.py
+test_calendar_personal.py
+test_agent_flow.py

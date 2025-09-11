@@ -1,0 +1,166 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+    --primary-color: #6366f1;
+    /* Indigo 500 */
+    --secondary-color: #f87171;
+    /* Red 400 */
+    --background-color: #1f2937;
+    /* Gray 800 */
+    --surface-color: #374151;
+    /* Gray 700 */
+    --text-color: #f9fafb;
+    /* Gray 50 */
+    --subtle-text-color: #9ca3af;
+    /* Gray 400 */
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    background-image: radial-gradient(at 0% 100%, #111827, #1f2937);
+}
+
+.scrollable-content {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.scrollable-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.scrollable-content::-webkit-scrollbar-track {
+    background: #4b5563;
+    border-radius: 4px;
+}
+
+.scrollable-content::-webkit-scrollbar-thumb {
+    background-color: #9ca3af;
+    border-radius: 4px;
+}
+
+.tab-button.active {
+    color: var(--primary-color);
+    background-color: #374151;
+    /* Darker background for active tab */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.input-glow:focus {
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.25);
+    border-color: var(--primary-color);
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+}
+
+.calendar-day {
+    padding: 8px;
+    text-align: center;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+.calendar-day:hover {
+    background-color: #4b5563;
+    /* Gray 600 */
+    transform: scale(1.05);
+}
+
+.calendar-day.inactive {
+    color: var(--subtle-text-color);
+    cursor: default;
+}
+
+.calendar-day.inactive:hover {
+    background-color: transparent;
+    transform: none;
+}
+
+/* New classes for color-coded meeting density */
+.calendar-day.has-meetings-green {
+    background-color: #10b981;
+    /* Green 500 */
+    color: white;
+}
+
+.calendar-day.has-meetings-yellow {
+    background-color: #f59e0b;
+    /* Amber 500 */
+    color: white;
+}
+
+.calendar-day.has-meetings-red {
+    background-color: #ef4444;
+    /* Red 500 */
+    color: white;
+}
+
+.calendar-day.today {
+    border: 2px solid var(--primary-color);
+    background-color: transparent;
+}
+
+.calendar-day.today.has-meetings-green {
+    background-color: #10b981;
+    /* Green 500 */
+    border-color: #34d399;
+}
+
+.calendar-day.today.has-meetings-yellow {
+    background-color: #f59e0b;
+    /* Amber 500 */
+    border-color: #fbbf24;
+}
+
+.calendar-day.today.has-meetings-red {
+    background-color: #ef4444;
+    /* Red 500 */
+    border-color: #f87171;
+}
+
+
+/* New styles for the reschedule icon and label */
+.reschedule-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+}
+
+.reschedule-button:hover {
+    transform: scale(1.05);
+}
+
+.reschedule-label {
+    font-size: 0.75rem;
+    color: var(--subtle-text-color);
+    margin-bottom: 4px;
+    white-space: nowrap;
+}
+
+.reschedule-icon {
+    font-size: 2rem;
+    color: #9ca3af;
+    transition: color 0.2s ease-in-out;
+}
+
+.reschedule-button:hover .reschedule-icon {
+    color: #fff;
+}
+
+/* Fix for datetime-local input visibility */
+input[type="datetime-local"] {
+    color-scheme: dark;
+    background-color: #374151; /* A dark gray background */
+    color: #f9fafb; /* Light text for readability */
+}

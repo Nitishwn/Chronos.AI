@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meeting Assistant</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Meeting Assistant</h1>
+            <div id="statusMessage" class="status-message">Enter a meeting request to begin.</div>
+        </header>
+
+        <div class="tab-container">
+            <button class="tab-btn active" data-tab="newMeeting">New Meeting</button>
+            <button class="tab-btn" data-tab="upcomingMeetings">Upcoming</button>
+            <button class="tab-btn" data-tab="contacts">Contacts</button>
+        </div>
+
+        <div id="tabContent">
+            <div id="newMeeting" class="tab-page active">
+                <div class="input-area">
+                    <input type="text" id="meetingQuery" placeholder="e.g., Book a 30-min sync with John tomorrow">
+                    <button id="micBtn" class="mic-btn"><i class="fa-solid fa-microphone"></i></button>
+                    <button id="sendBtn" class="send-btn">Send</button>
+                </div>
+                
+                <div id="suggestionsArea" class="result-box hidden">
+                    <h3>Suggested Time Slots:</h3>
+                    <div id="slotList" class="slot-list"></div>
+                </div>
+
+                <div id="loadingIndicator" class="loading-indicator hidden">
+                    <i class="fa-solid fa-spinner fa-spin"></i> Processing...
+                </div>
+
+                <div id="confirmationArea" class="result-box hidden"></div>
+                <div id="generalMessageArea" class="result-box hidden"></div>
+            </div>
+
+            <div id="upcomingMeetings" class="tab-page hidden">
+                <div class="input-area search-input">
+                    <input type="text" id="meetingSearch" placeholder="Search meetings by title or date">
+                    <button id="searchBtn" class="search-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
+                </div>
+                
+                <div id="upcomingMeetingsList" class="meeting-list"></div>
+
+                <div id="searchLoadingIndicator" class="loading-indicator hidden">
+                    <i class="fa-solid fa-spinner fa-spin"></i> Searching...
+                </div>
+            </div>
+
+            <div id="contacts" class="tab-page hidden">
+                <div class="form-section">
+                    <h3>Add a New Contact</h3>
+                    <input type="text" id="contactName" placeholder="Full Name">
+                    <input type="email" id="contactEmail" placeholder="Email Address">
+                    <button id="addContactBtn" class="send-btn">Add Contact</button>
+                </div>
+                <div class="list-section">
+                    <h3>My Contacts</h3>
+                    <div id="contactsList" class="contacts-list"></div>
+                </div>
+                <div id="contactsLoadingIndicator" class="loading-indicator hidden">
+                    <i class="fa-solid fa-spinner fa-spin"></i> Loading contacts...
+                </div>
+                <div id="contactsStatusMessage" class="status-message"></div>
+            </div>
+        </div>
+    </div>
+    <script src="popup.js"></script>
+</body>
+</html>
